@@ -1,22 +1,20 @@
+---
 language: java
 jdk: oraclejdk7
 install:
- - sudo apt-get install s3cmd
- - sudo pip install mkdocs
+- sudo apt-get install s3cmd
+- sudo pip install mkdocs
 before_script:
- - 'export CROWDIN_PROJECT_ID="getlwc"'
- - 'export DOCS_BUCKET="docs.getlwc.org"'
- - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && echo -e "[default]\naccess_key = $AWS_ACCESS_KEY_ID\nsecret_key=$AWS_SECRET_ACCESS_KEY" > .s3cfg'
- - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && sh backend/scripts/crowdin.sh'
+- export CROWDIN_PROJECT_ID="getlwc"
+- export DOCS_BUCKET="docs.getlwc.org"
+- "[ \"${TRAVIS_SECURE_ENV_VARS}\" = \"true\" ] && echo -e \"[default]\\naccess_key
+  = $AWS_ACCESS_KEY_ID\\nsecret_key=$AWS_SECRET_ACCESS_KEY\" > .s3cfg"
+- "[ \"${TRAVIS_SECURE_ENV_VARS}\" = \"true\" ] && sh backend/scripts/crowdin.sh"
 script: mvn -Dmaven.javadoc.skip=true clean install
 after_success:
- - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && mkdocs build --clean'
- - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && s3cmd sync --config .s3cfg --delete-removed site/. "s3://${DOCS_BUCKET}/"'
-notifications:
-  webhooks:
-    urls:
-      - http://api.getlwc.org/events/travisci
-    on_start: true
+- "[ \"${TRAVIS_SECURE_ENV_VARS}\" = \"true\" ] && mkdocs build --clean"
+- "[ \"${TRAVIS_SECURE_ENV_VARS}\" = \"true\" ] && s3cmd sync --config .s3cfg --delete-removed
+  site/. \"s3://${DOCS_BUCKET}/\""
 addons:
   artifacts:
     key:
@@ -25,7 +23,7 @@ addons:
       secure: c95q4+B3zAftsvUpTNE80/Q48YPxBVh+Mc5ZJ5wIBQ2SOyPygTca6I4AVBmrL0TQBfjBGmka49MCdvA11aglVT9vPfWxWIT9qSbJmuHXFY5RlUG6wtHlTw3wLnjrAw6zE0RDzG+E2sEDi81ADe43kG/9xMuzYdPjvEpFT5LK5hM=
     bucket: artifacts.getlwc.org
     paths:
-    - $(git ls-files -x mcp -x original-*.jar -o *.jar *.zip | tr "\n" ":")
+    - "$(git ls-files -x mcp -x original-*.jar -o *.jar *.zip | tr \"\\n\" \":\")"
 env:
   global:
   - secure: VWhdYVwHpkf688jTIvd87y6J62sIQDT3xzUHm9GGI8NPRVw37nv2SbnNqUO9728DrCCJoGSCmCiKCv483Kg6Zj4HmOZzDf+3nMsX6PtZjoIfetMH2QQ+X49bYtKXP3+gLhbt5tkKz0U5yaWA9aVllzn+5Fvrfpkpdel+etK8TXE=
